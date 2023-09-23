@@ -1,0 +1,9 @@
+Thank you for uploading {{broker}} broker transactions. 
+We are working now on getting this broker added and 
+we will email you once this broker is ready. 
+
+Please expect for 1-3 weeks of development time once we have 
+collected data for the broker. 
+
+For more information contact 
+<a target="_blank" href="{% url 'support'%}"> support</a>.

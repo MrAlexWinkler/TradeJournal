@@ -1,0 +1,43 @@
+<div
+    {% if last_import.status == 'Pending'  %}
+            hx-get="{% url 'import-status' %}" 
+            hx-trigger="every 20s"
+            hx-swap="outerHTML"
+    {% endif %}
+        
+    >
+    <div class="alert alert-info alert-dismissible b-5" role="alert">
+        <span type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></span>
+        <div class="alert-message">
+            {% if last_import.status == 'Pending' %}
+            <strong class="text-warning"></strongclass>Importing transactions in progress! ⏳</strong>
+            <a href="{% url 'import-report' %}" class=""> Learn more.</a>
+
+            {% endif %}
+            {% if last_import.status == 'Succeeded' %}
+            <strong class="text-success">Successfully imported {{last_import.entries_no}} transactions! 🥳 </strong>
+            <a href="{% url 'import-report' %}" class=""> Learn more.</a>
+
+            {% endif %}
+            {% if last_import.status == 'Failed' %}
+            <strong class="text-danger">last Importing transactions failed! 💀 </strong>{{last_import.error|truncatewords:5}}
+            <a href="{% url 'import-report' %}" class=""> Learn more.</a>
+
+            {% endif %}
+
+            <!-- <a href="{% url 'import-report' %}" class="btn btn-primary float-end btn-lg"> More</a> -->
+
+        </div>
+    </div>
+    {% comment %}
+    <!-- this commented because messages rendering doesnot look nice-->
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            {{ message|safe }}
+        </div>
+    {% endfor %}
+    {% endcomment %}
+</div>

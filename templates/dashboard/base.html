@@ -1,0 +1,403 @@
+{% load static %}
+{% load staticfiles %}
+{% load i18n %}
+{% load tz %}
+{% now "Y-m-d" as current_date %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="TradeJournal is an online trading journal focusing on trading analytics, community & mentorships.">
+    <meta name="keywords" content="TradeJournal, Trade Journal, TradeJournal.co, Trading Journal, Trading Analytics, Free Trading Journal, Online Trading Journal, OpenSource Trading Journal">
+    <meta name="author" content="TradeJournal">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="english">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Favicon & Fonts -->
+    <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- script -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-size:0.938rem!important;
+            line-height: 1.625!important;
+        }
+        .rounded-circle {
+            border-radius: 25%!important;
+        }
+    </style>
+
+    <!-- Choose your prefered color scheme -->
+    {% if request.user.profile.theme == 'Dark' %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.12/sweetalert2.min.css" />
+    <link href="{% static 'bootstrap5/dist/css/dark.css' %}" rel="stylesheet">
+        <!-- Additioanl CSS should be moved to style sheets when able -->
+        <style>
+            p {
+                /* font-size: 1.1em; */
+                color: white !important;
+            }
+
+            dl, ol, ul {
+                color: white !important;
+            }
+        </style>
+    {% else %}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+        <link href="{% static 'bootstrap5/dist/css/light.css' %}" rel="stylesheet">
+        <!-- Additioanl CSS should be moved to style sheets when able -->
+        <style>
+            p {
+                color: black !important;
+            }
+            dl, ol, ul {
+                color: black !important;
+            }
+        </style>
+
+    {% endif %}
+
+    {% block styles %}
+    {% endblock styles %}
+
+
+</head>
+
+<!--
+  HOW TO USE:
+  data-theme: default, dark (default), light
+  data-layout: fluid (default), boxed
+  data-sidebar-position: left (default), right
+  data-sidebar-behavior: sticky (default), fixed, compact
+-->
+
+<body data-theme="dark" data-layout="fluid" data-sidebar-position="left" data-sidebar-behavior="sticky">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WMVH4CR"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div class="wrapper">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-content js-simplebar">
+                <!-- Branding -->
+                <a class="sidebar-brand" href="{% url 'home' %}">
+                    <span class="align-middle me-3"><span>Trade</span>Journal <sup
+                            class="text-primary">Beta</sup></span>
+                </a>
+                <!-- Nav Items -->
+                <ul class="sidebar-nav">
+                    <!-- Insider -->
+                    <!-- <li class="sidebar-item">
+                        <a href="{% url 'insider' %}" data-bs-target="" class="sidebar-link">
+                            <i class="feather fas fa-fw fa-rocket"></i> <span
+                                class="align-middle text-success">Insider</span>
+                        </a>
+                    </li> -->
+                    <!-- Dashboard -->
+                    <li class="sidebar-item">
+                        <a href="{% url 'dash' %}" data-bs-target="" class="sidebar-link">
+                            <i class="feather fas fa-fw fa-tachometer-alt"></i> <span
+                                class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+                    <!-- Portfolios -->
+                    <li class="sidebar-item">
+                        <a href="{% url 'portfolio-list' %}" data-bs-target="" class="sidebar-link">
+                            <i class="feather fas fa-fw fa-list-alt"></i> <span
+                                class="align-middle">Portfolios</span>
+                        </a>
+                    </li>
+                    <!-- Trades -->
+                    <!-- <li class="sidebar-item">
+                        <a href="{% url 'trade-list' %}" data-bs-target="" class="sidebar-link">
+                            <i class="feather fas fa-fw fa-bars"></i> <span
+                                class="align-middle">Trades</span>
+                        </a>
+                    </li> -->
+                    <li class="sidebar-item">
+                        <a href="{% url 'stats' %}" data-bs-target="" class="sidebar-link">
+                            <i class="feather fas fa-fw fa-bars"></i> <span
+                                class="align-middle">Trades</span>
+                        </a>
+                    </li>
+                    <!-- Posts -->
+                    <li class="sidebar-item">
+                        <a href="{% url 'post-list' %}" data-bs-target="" class="sidebar-link">
+                            <i class="feather fas fa-fw fa-thumbtack"></i> <span
+                                class="align-middle">Posts</span>
+                        </a>
+                    </li>
+                    <!-- Mentors -->
+                    <li class="sidebar-item">
+                        <!-- <a href="{% url 'mentors' %}" data-bs-target="" class="sidebar-link">
+                            <i class="feather fas fa-fw fa-hands-helping"></i> <span
+                                class="align-middle">Mentors<span class="badge badge-sidebar-primary">New</span></span>
+                        </a> -->
+                        <!-- <a href="{% url 'considerations' %}" data-bs-target="" class="sidebar-link">
+                            <i class="feather fas fa-fw fa-rocket"></i> <span
+                                class="align-middle text-success">Actions<span class="badge badge-sidebar-primary"></span></span>
+                        </a> -->
+                    </li>
+                    <!-- <li class="sidebar-item">
+                        <a data-bs-target="#mentors" data-bs-toggle="collapse" class="sidebar-link collapsed">
+                            <i class="align-middle fas fa-fw fa-rocket"></i> <span class="align-middle text-success">Fast Track</span>
+                        </a>
+                        <ul id="mentors" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'fasttrack' %}">Program 
+                                <span class="badge badge-sidebar-primary bg-success">Pilot</span></a>
+                            </li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'considerations' %}">Considerations
+                                <span class="badge badge-sidebar-primary bg-success">New</span></a>
+                            </li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'mentors' %}">Verified Traders</a></li>
+                        </ul>
+                    </li> -->
+                    <!-- Analytics -->
+                    <li class="sidebar-item">
+                        <a data-bs-target="#stats" data-bs-toggle="collapse" class="sidebar-link collapsed">
+                            <i class="align-middle fas fa-fw fa-chart-bar"></i> <span class="align-middle">Analytics</span>
+                        </a>
+                        <ul id="stats" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'stats' %}">Stats</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'insights' %}">Insights
+                                <!-- <span class="badge badge-sidebar-primary">New</span> -->
+                                </a>
+                            </li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'calendar' %}">Calendar</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'running' %}">Running P&L</a></li>
+
+
+                            <!-- <li class="sidebar-item"><a class="sidebar-link" href="#">Patterns<span class="badge badge-sidebar-primary">Coming</span></a></li> -->
+                        </ul>
+                    </li>
+                    <!-- Community -->
+                    <li class="sidebar-item">
+                    <a data-bs-target="#community" data-bs-toggle="collapse" class="sidebar-link collapsed">
+                        <i class="align-middle fas fa-fw fa-users"></i> <span class="align-middle">Community</span>
+                    </a>
+                        <ul id="community" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="{% url 'insider' %}" class="sidebar-link">
+                                    <!-- <i class="feather fas fa-fw fa-rocket"></i>  -->
+                                    <span class="align-middle text-success">Insider</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item"><a class="sidebar-link text-success" href="{% url 'leaderboards' %}">Leaderboards
+                                <!-- <span class="badge badge-sidebar-primary">New</span> -->
+                                </a>
+                            </li>
+                            <li class="sidebar-item"><a class="sidebar-link text-success" href="{% url 'mentors' %}">Verified Traders</a></li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link text-success" href="{% url 'course_list' %}">Courses
+                                    <span class="badge badge-sidebar-success">Updated!</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'community' %}">Activity
+                                <!-- <span class="badge badge-sidebar-primary">New</span> -->
+                                </a>
+                            </li>
+                            <li class="sidebar-item"><a class="sidebar-link" target="_blank" href="https://discordapp.com/invite/xa82WHfEq8">Chatrooms</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" target="_blank" href="https://www.youtube.com/@tradejournalco?sub_confirmation=1">Podcast</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'search' %}">Search
+                                <!-- <span class="badge badge-sidebar-primary">New</span> -->
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Mentorships Old -->
+                    <!-- <li class="sidebar-item">
+                        <a data-bs-target="#mentorship" data-bs-toggle="collapse" class="sidebar-link collapsed">
+                            <i class="align-middle fas fa-fw fa-hands-helping"></i> <span class="align-middle">Mentorship</span>
+                        </a>
+                        <ul id="mentorship" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'mentors' %}">Mentors
+                                <span class="badge badge-sidebar-primary">New</span>
+                            </a>
+                        </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'student' %}">Student
+                                    <span class="badge badge-sidebar-primary">New</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'mentor-application' %}">Mentor
+                                    <span class="badge badge-sidebar-primary">New</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'classes' %}">Classes
+                                    <span class="badge badge-sidebar-primary">New</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li> -->
+                    <!-- Tools & More -->
+                    <li class="sidebar-item">
+                        <a data-bs-target="#tools" data-bs-toggle="collapse" class="sidebar-link collapsed">
+                            <i class="align-middle fas fa-fw fa-tools"></i> <span class="align-middle">Tools & More</span>
+                        </a>
+                        <ul id="tools" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'import-entry' %}">Import Wizard</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'broker-list' %}">Exchanges & Brokers</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'symbol-list' %}">Symbols</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'pattern-list' %}">Patterns</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- Sponsor 1 & 2 Left Nav Bar -->
+
+                <!-- <p class="text-center small bg bg-secondary text-light">Sponsored Deals 👇</p> -->
+
+                {% if life_time_mentor_access or request.user.profile.has_insider_program %}
+
+                {% elif not request.user.profile.has_block_ads %}
+
+
+
+            </div>
+        </nav>
+        <div class="main">
+            <nav class="navbar navbar-expand navbar-light navbar-bg">
+                <a class="sidebar-toggle">
+                    <i class="hamburger align-self-center"></i>
+                </a>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav navbar-align">
+
+
+                    </ul>
+                </div>
+            </nav>
+            <main class="content">
+
+                <div class="container-fluid p-0">
+
+
+                    {% block content %}
+                    {% endblock %}
+
+
+
+                </div>
+            </main>
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row text-muted">
+                        <div class="col-6 text-start">
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://www.tradejournal.co/support/">Support</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://www.tradejournal.co/about/">About</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-3 text-center">
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://twitter.com/tradejournalco" target="_blank">
+                                        <i class="fab fa-twitter"></i></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://www.facebook.com/TradeJournalco" target="_blank">
+                                        <i class="fab fa-facebook-f"></i></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://www.facebook.com/groups/tradejournal/" target="_blank">
+                                        <i class="fab fa-facebook-f"></i><small>g</small></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://www.instagram.com/TradeJournalco" target="_blank">
+                                        <i class="fab fa-instagram"></i></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://www.youtube.com/channel/UCXp4JJEcGWbsWXeSK79_ImA" target="_blank">
+                                        <i class="fab fa-youtube"></i></a>
+                                </li>
+
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://discordapp.com/invite/xa82WHfEq8" target="_blank">
+                                        <i class="fab fa-discord"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-3 text-end">
+                            <p class="mb-0">
+                                <a href="{% url 'home' %}" class="text-muted">TradeJournal</a> &copy; {% now "Y" %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+
+
+    {% block script1 %}
+
+    {% endblock %}
+    {% block mainscript %}
+    <!-- Bootstrap5 -->
+   <script src="{% static 'bootstrap5/dist/js/app.js' %} "></script>
+
+   {% endblock %}
+
+    <script>
+        $(document).ready(function () {
+            {% block jquery %} {% endblock %}
+        })
+    </script>
+    {% block jscripts %}
+
+    {% endblock jscripts %}
+
+    {{ form.media }}
+
+
+    {% block scripts %}
+
+    {% endblock scripts %}
+
+    {% block js %}
+
+    {% endblock js %}
+
+    <script src="https://unpkg.com/htmx.org@1.1.0"></script>
+    <script>
+      document.body.addEventListener('htmx:configRequest', (event) => {
+        event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+      })
+      //htmx.logAll();
+
+    </script>
+    <script src="https://unpkg.com/sweetalert2@11"></script>
+
+
+    {% block htmx %}
+    {% endblock htmx %}
+
+    {% block extra_script %}{% endblock %}
+
+
+
+</body>
+
+</html>

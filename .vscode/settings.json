@@ -1,0 +1,5 @@
+{
+    "python.terminal.activateEnvironment": true,
+    "python.pythonPath": "$tj3_OpenSource/venv/Scripts/python.exe"
+}
+  
